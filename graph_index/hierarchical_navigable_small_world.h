@@ -189,7 +189,7 @@ public:
     	HNSWGraphOperations::Search(points_->GetFirstPositionofPoint(0), queries, graph_, results, num_of_query_points, points_->GetNumPoints(), points_->GetDimofPoints(), 
     		num_of_initial_neighbors_, num_of_final_neighbors, num_of_topk_, num_of_candidates, num_of_explored_points, num_of_layers_, num_of_points_on_each_layer_);
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-        std::cout << "Query speed: " << (double)num_of_query_points/(double)(std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1000000) << " queries per second" << endl;
+        std::cout << "Query speed: " << (double)num_of_query_points/((double)std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1000000) << " queries per second" << endl;
     }
 
 	void Establishment(int num_of_initial_neighbors, int num_of_candidates){
@@ -275,7 +275,7 @@ public:
     }
 
     void DisplaySearchParameters(int num_of_topk, int num_of_candidates){
-        cout << "Parameters" << endl;
+        cout << "Parameters:" << endl;
         cout << "           the number of topk = " << num_of_topk << endl;
         cout << "           e = " << num_of_candidates << endl << endl;
     }
