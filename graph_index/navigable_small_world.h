@@ -213,14 +213,14 @@ public:
     }
 
     void DisplayGraphParameters(int num_of_candidates){
-        cout << "Parameters" << endl;
+        cout << "Parameters:" << endl;
         cout << "           d_min = " << num_of_initial_neighbors_ << endl;
         cout << "           d_max = " << num_of_maximal_neighbors_ << endl;
         cout << "           l_n = " << num_of_candidates << endl << endl;
     }
 
     void DisplaySearchParameters(int num_of_topk, int num_of_candidates){
-        cout << "Parameters" << endl;
+        cout << "Parameters:" << endl;
         cout << "           the number of topk = " << num_of_topk << endl;
         cout << "           e = " << num_of_candidates << endl << endl;
     }
