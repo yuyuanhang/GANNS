@@ -12,8 +12,8 @@ using namespace std;
 class HierarchicalNavigableSmallWorld : public GraphWrapper{
 
 private:
-	Data* points_;
-	int num_of_points_one_batch_ = 500;
+    Data* points_;
+    int num_of_points_one_batch_ = 500;
     int num_of_batches_;
     int num_of_layers_ = 0;
     int* num_of_points_on_each_layer_;
