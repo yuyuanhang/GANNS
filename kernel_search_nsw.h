@@ -93,7 +93,7 @@ WITHIN_WARP_
         }
         auto stage2_end = clock64();
         if(t_id == 0){
-            crt_time_breakdown[1] = stage2_end - stage2_start;
+            crt_time_breakdown[1] += stage2_end - stage2_start;
         }
 
         auto stage3_start = clock64();
@@ -120,28 +120,28 @@ WITHIN_WARP_
         }
         auto stage3_end = clock64();
         if(t_id == 0){
-            crt_time_breakdown[2] = stage3_end - stage3_start;
+            crt_time_breakdown[2] += stage3_end - stage3_start;
         }
 
         auto stage4_start = clock64();
 BINARY_SEARCH_
         auto stage4_end = clock64();
         if(t_id == 0){
-            crt_time_breakdown[3] = stage4_end - stage4_start;
+            crt_time_breakdown[3] += stage4_end - stage4_start;
         }
 
         auto stage5_start = clock64();
 BITONIC_SORT_ON_NEIGHBORS_
         auto stage5_end = clock64();
         if(t_id == 0){
-            crt_time_breakdown[4] = stage5_end - stage5_start;
+            crt_time_breakdown[4] += stage5_end - stage5_start;
         }
         
         auto stage6_start = clock64();
 BITONIC_MERGE_
         auto stage6_end = clock64();
         if(t_id == 0){
-            crt_time_breakdown[5] = stage6_end - stage6_start;
+            crt_time_breakdown[5] += stage6_end - stage6_start;
         }
         
         auto stage1_start = clock64();
@@ -163,7 +163,7 @@ BITONIC_MERGE_
         }
         auto stage1_end = clock64();
         if(t_id == 0){
-            crt_time_breakdown[0] = stage1_end - stage1_start;
+            crt_time_breakdown[0] += stage1_end - stage1_start;
         }
 
     }
