@@ -5,6 +5,11 @@ the ANN search on proximity graphs by re-designing the classical CPU-based searc
 and using GPU-friendly data structures. 
 (2) novel GPU-based proximity graph construction algorithms which ensure the quality of the resulting proximity graph.
 
+## Environment
+GCC version: ```8.5.0```
+
+CUDA version: ```11.8```
+
 ## Usage
 Step 1. Generate template
 ```zsh
