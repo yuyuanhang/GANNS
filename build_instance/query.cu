@@ -97,23 +97,6 @@ void ComputeRecall(int* results, int* groundtruth, int num_of_queries, int num_o
     recall = (float)num_of_right_candidates / (num_of_queries * num_of_topk);
 }
 
-void ComputeRecall_LLM(int* results, int* groundtruth, int num_of_queries, int num_of_topk, int k_of_groundtruth, int num_of_topk_, float &recall){
-    int num_of_right_candidates = 0;
-    //按照query遍历每个查询点，检查topk个候选
-    for(int i=0; i< num_of_queries; i++){
-        int flag = 0;
-        for (int j =0; j< num_of_topk; j++){
-            int crt_candidate_id = results[i * num_of_topk_ + j];
-            // int * position_of_candidate = NULL;
-            if(crt_candidate_id == groundtruth[i])
-            flag = 1;
-        }
-        num_of_right_candidates= num_of_right_candidates + flag;
-    }
-    recall = (float)num_of_right_candidates/num_of_queries;
-}
-
-
 int main(int argc,char** argv){
 
     //required variables from external input
@@ -151,7 +134,7 @@ int main(int argc,char** argv){
     graph->SearchTopKonDevice(query_points->GetFirstPositionofPoint(0), num_of_topk, results, query_points->GetNumPoints(), num_of_candidates);
     
     float recall = 0;
-    ComputeRecall_LLM(results, groundtruth, query_points->GetNumPoints(), num_of_topk, k_of_groundtruth, pow(2.0, ceil(log(num_of_topk) / log(2))), recall);
+    ComputeRecall(results, groundtruth, query_points->GetNumPoints(), num_of_topk, k_of_groundtruth, pow(2.0, ceil(log(num_of_topk) / log(2))), recall);
     cout << "Recall: " << recall << endl;
 
     return 0;
