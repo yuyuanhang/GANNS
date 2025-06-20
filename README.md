@@ -1,69 +1,75 @@
 # GANNS
+## Update
+We have refactored the project to improve code readability.
+
 ## Introduction
-This project includes (1) a GPU-based algorithm GANNS which can accelerate 
-the ANN search on proximity graphs by re-designing the classical CPU-based search algorithm 
-and using GPU-friendly data structures. 
-(2) novel GPU-based proximity graph construction algorithms which ensure the quality of the resulting proximity graph.
+This project includes:
 
-## Environment
-GCC version: ```8.5.0```
+(1) GANNS, a GPU-based algorithm that accelerates approximate nearest neighbor (ANN) search on proximity graphs by redesigning classical CPU-based search methods and adopting GPU-friendly data structures;
 
-CUDA version: ```11.8```
+(2) novel GPU-based construction algorithms for proximity graphs that ensure high-quality graph structures.
 
 ## Usage
-Step 1. Generate template
+To use this project, specify the distance metric and data dimensionality in lines 23–24 of ```CMakeLists.txt```.
 ```zsh
-./generate_template.sh
+target_compile_definitions(${PROJECT_NAME} PRIVATE [YOUR METRIC])
+target_compile_definitions(${PROJECT_NAME} PRIVATE PLACE_HOLDER_DIM=[YOUR DIMENSION])
+```
+Currently, the project supports arbitrary dimensions and three distance metrics: ```Euclidean distance (USE_DIST_L2_)```, ```cosine similarity (USE_DIST_CS_)```, and ```inner product (USE_DIST_IP_)```.
+
+### Construction
+The construction algorithm requires the following parameters to be provided.
+```zsh
+./GANNS -b [base_path] [graph_type] [d_min] [M] [graph_path]
+```
+Specifically:
+
+	[base_path] specifies the directory containing the data points (i.e., the database).
+ 
+	[graph_type] defines the type of proximity graph to construct.
+ 
+	[d_min] indicates the minimum degree in the proximity graph (with d_max automatically set to 2 * d_min).
+ 
+	[M] denotes the number of nearest neighbors retained during the search for each node’s neighbors (with e automatically set to M).
+ 
+	[graph_path] specifies the directory where the constructed graph will be saved.
+
+At present, two types of proximity graphs are supported: ```NSW (nsw)``` and ```HNSW (hnsw)```.
+
+For example, the following command builds a NSW graph on the SIFT dataset.
+
+(Note: The files referenced in the command are not included in this project due to their large size.)
+```zsh
+./GANNS -b dataset/sift/base.fvecs nsw 16 64 idx/sift_16_64.nsw
 ```
 
 ### Search
-To use search algorithm, generate query instance.
+The search algorithm requires the following parameters to be provided.
 ```zsh
-./generate_query_instances.sh [dim] [metric]
+./GANNS -q [base_path] [query_path] [graph_type] [graph_path] [groundtruth_path] [k] [e] [M]
 ```
-For instance, the following command line generates an executable program which can work on datasets with dimension 128 and metric euclidean distance. 
-```zsh
-./generate_query_instances.sh 128 l2
-```
-Currently, we support dimension ```no larger than 960``` and three metrics: ```euclidean distance (l2)```, ```cosine similarity (cos)``` and ```inner product (ip)```.
+Specifically:
 
-To use the generated executable program, the following parameters need to be provided.
-```zsh
-./query_128_l2 [base_path] [query_path] [graph_type] [graph_path] [groundtruth_path] [e] [k]
-```
-Specifically, ```[base_path]``` is the directory of data points (database); ```[query_path]``` is the directory of query points; ```[graph_type]``` is the type of proximity graph; 
-```[groundtruth_path]``` is the directory of groundtruth; ```[e]``` represents the number of explored vertices; ```[k]``` denotes the number of returned nearest neighbors;
+	[base_path] specifies the directory containing the data points (i.e., the database).
 
-For instance, the following command line performs ANN search on NSW constructed on SIFT dataset 
-(These files in the command line are not included in this project due to their size).
-```zsh
-./query_128_l2 ../dataset/sift/base.fvecs ../dataset/sift/query.fvecs nsw ../dataset/sift/base.fvecs_64_16.nsw ../dataset/sift/groundtruth.ivecs 64 10
-```
-Currently, we support two proximity graphs: ```NSW (nsw)``` and ```HNSW (hnsw)```.
+	[query_path] specifies the directory containing the query points.
+  
+	[graph_type] indicates the type of proximity graph to be used.
 
-### Construction
-To use construction algorithm, generate build instance.
-```zsh
-./generate_build_instances.sh [dim] [metric]
-```
-Similarly, we support dimension ```no larger than 960``` and three metrics: ```euclidean distance (l2)```, ```cosine similarity (cos)``` and ```inner product (ip)```.
+	[groundtruth_path] is the directory of the ground-truth nearest neighbors.
 
-To use the generated executable program, the following parameters need to be provided.
-```zsh
-./build_128_l2 [base_path] [graph_type] [e] [d_min]
-```
-Specifically, ```[base_path]``` is the directory of data points (database); ```[graph_type]``` is the type of proximity graph; 
-```[e]``` represents the number of explored vertices; ```[d_min]``` denotes minimum degree in the proximity graph (by default, d_max = 2 * d_min);
+	[k] denotes the number of nearest neighbors to return.
 
-For instance, the following command line establishes a HNSW graph on SIFT dataset 
-(These files in the command line are not included in this project due to their size).
-```zsh
-./build_128_l2 ../dataset/sift/base.fvecs hnsw 64 16
-```
-Similarly, we support two proximity graphs: ```NSW (nsw)``` and ```HNSW (hnsw)```.
+	[e] specifies the number of vertices to explore during the search.
 
-Notice the parameters ```dim``` and ```metric``` that are provided to generate query (resp. build) instances must be consistent with dimension and metric of datasets. 
-Otherwise, the executable program may shut down, or the recall (resp. the quality of proximity graph) may be poor.
+	[M] denotes the number of nearest neighbors retained during the search for each node’s neighbors (Note: e <= M).
+
+For example, the following command performs approximate nearest neighbor (ANN) search on an NSW graph built from the SIFT dataset.
+
+(Note: The files referenced in the command are not included in this project due to their large size.)
+```zsh
+./GANNS -q dataset/sift/base.fvecs dataset/sift/query.fvecs nsw idx/sift_16_64.nsw dataset/sift/groundtruth.ivecs 10 64 64
+```
 
 ## Datasets
 The information of used real-world datasets is provided in our paper. Currently, we support ```.fvecs``` file for base datasets and query datasets 
